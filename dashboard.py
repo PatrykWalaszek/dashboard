@@ -7,6 +7,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 import numpy as np
 import pandas as pd
+import os
 
 ## vars and functions
 global cat_g ,sample_type
@@ -14,20 +15,20 @@ cat_g = ["good","bad","worst"]
 sampletype=["beta",]
 
 def datagen():
-    my_sample_data = np.random.random_sample([100,3])
-    sample_Cat = [cat_g[np.random.randint(0,3)] for i in range(100)]
-    Base_Data = pd.DataFrame(my_sample_data,columns=["val_1","val_2","val_3"])
-    Base_Data["sample_Cat"] = sample_Cat
-    return(Base_Data)
+    my_sample_data = np.random.random_sample([13,3])
+    sample_Cat = [cat_g[np.random.randint(0,3)] for i in range(13)]
+    #Base_Data = pd.DataFrame(my_sample_data,columns=["val_1","val_2","val_3"])
+    data=pd.read_excel("C:/Users/Narcys/sync/python/concat/dane/output.xlsx",engine='openpyxl')
+    data["sample_Cat"] = sample_Cat = ['good' for i in range(13)]
+    return(data)
 
-def fig_generator(sample_data):
-    sample_data = sample_data.reset_index(drop=True)
-    sample_data.head()
+def fig_generator(data):
+    data = data.reset_index(drop=True)
     plot_data =[]
 
-    for i in range(1,4):
-        plot_data.append(go.Scatter(x=sample_data.index, y=sample_data['val_'+ str(i)], name = 'val_'+ str(i) ))
-    plot_layout = go.Layout(title = " This plot is generated using plotly  ")
+    for i in range(4,10):
+        plot_data.append(go.Scatter(x=data.index, y=data[data.columns[i]], name = data.columns[i] ))
+        plot_layout = go.Layout(title = " This plot is generated using plotly  ")
 
     fig = go.Figure( data = plot_data ,layout = plot_layout)
 
@@ -77,9 +78,9 @@ app.layout=html.Div(children=[html.Div("My dashboard", style={
 def updateplot(input_cat):
     
     df= datagen()
-    sample_data = df[df["sample_Cat"] == input_cat ]
+    data = df[df["sample_Cat"] == input_cat ]
     
-    trace,layout = fig_generator(sample_data)
+    trace,layout = fig_generator(data)
     
     return {
         'data': trace,
