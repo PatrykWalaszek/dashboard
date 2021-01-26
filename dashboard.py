@@ -1,13 +1,14 @@
 ### libs
+from dash.dependencies import State, Input, Output
 import plotly.graph_objects as go
+import plotly.offline as plotly
 import dash
 import dash_html_components as html
+import dash_core_components as dcc
 import numpy as np
 import pandas as pd
-import dash_core_components as dcc
-import plotly.offline as plotly
-from dash.dependencies import State, Input, Output
 
+## vars and functions
 global cat_g ,sample_type
 cat_g = ["good","bad","worst"] 
 sampletype=["beta",]
@@ -32,13 +33,13 @@ def fig_generator(sample_data):
 
     return(fig.data,fig.layout)
     
-
+##options
 cat_g = ["good","bad","worst"] 
 options_list = []
 for i in cat_g:
     options_list.append({'label': i, 'value': i})
 
-
+## html Layout
 app = dash.Dash()
 app.layout=html.Div(children=[html.Div("My dashboard", style={
                                                     "color":"red",
@@ -83,10 +84,7 @@ def updateplot(input_cat):
     return {
         'data': trace,
         'layout':layout
-    }                                     
+    }    
+## run                                 
 if __name__=='__main__':
     app.run_server()
-
-
-
-
